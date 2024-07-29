@@ -5,7 +5,6 @@ const { buildSchema } = require('graphql');
 
 // Sample restaurant data
 let restaurants = [
-  // ... ( restaurant data here)
   {
     id: 1,
     name: "WoodsHill",
@@ -119,6 +118,8 @@ describe('GraphQL API', () => {
     const response = await request(app).post('/graphql').send({ query });
     expect(response.status).toBe(200);
     expect(response.body.data.restaurants).toBeDefined();
+    // Introduce a failure by expecting an incorrect value
+    expect(response.body.data.restaurants.length).toBe(10); // Assuming you have fewer restaurants
   });
 
   it('should fetch a restaurant by id', async () => {
@@ -133,7 +134,8 @@ describe('GraphQL API', () => {
     const response = await request(app).post('/graphql').send({ query });
     expect(response.status).toBe(200);
     expect(response.body.data.restaurant).toBeDefined();
-    expect(response.body.data.restaurant.name).toBe('WoodsHill');
+    // Introduce a failure by expecting an incorrect value
+    expect(response.body.data.restaurant.name).toBe('NonExistentRestaurant'); // This should fail
   });
 
   it('should create a new restaurant', async () => {
@@ -149,7 +151,8 @@ describe('GraphQL API', () => {
     const response = await request(app).post('/graphql').send({ query: mutation });
     expect(response.status).toBe(200);
     expect(response.body.data.setrestaurant).toBeDefined();
-    expect(response.body.data.setrestaurant.name).toBe('New Restaurant');
+    // Introduce a failure by expecting an incorrect value
+    expect(response.body.data.setrestaurant.name).toBe('Wrong Name'); // This should fail
   });
 
   it('should delete a restaurant', async () => {
@@ -163,6 +166,8 @@ describe('GraphQL API', () => {
     const response = await request(app).post('/graphql').send({ query: mutation });
     expect(response.status).toBe(200);
     expect(response.body.data.deleterestaurant.ok).toBe(true);
+    // Introduce a failure by checking incorrect data
+    expect(response.body.data.deleterestaurant.ok).toBe(false); // This should fail
   });
 
   it('should edit a restaurant', async () => {
@@ -177,5 +182,7 @@ describe('GraphQL API', () => {
     const response = await request(app).post('/graphql').send({ query: mutation });
     expect(response.status).toBe(200);
     expect(response.body.data.editrestaurant.name).toBe('Updated Name');
+    // Introduce a failure by checking incorrect data
+    expect(response.body.data.editrestaurant.name).toBe('Another Name'); // This should fail
   });
 });
